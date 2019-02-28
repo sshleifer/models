@@ -45,6 +45,7 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('vocab_file', '', 'Path to the vocabulary file. Defaults '
                     'to FLAGS.output_dir/vocab.txt.')
 flags.DEFINE_string('output_dir', '', 'Path to save tfrecords.')
+# flags.DEFINE_string('original_dir', '/tmp/imdb', 'Path to save tfrecords.')
 
 # Config
 flags.DEFINE_boolean('label_gain', False,
@@ -196,6 +197,11 @@ def generate_test_data(vocab_ids, writer_lm_all, writer_seq_ae_all):
   writer_class.close()
   writer_bd_class.close()
 
+def gen_augmented_data():
+  raise NotImplementedError()
+  tf.logging.set_verbosity(tf.logging.INFO)
+  tf.logging.info('Assigning vocabulary ids...')
+
 
 def main(_):
   tf.logging.set_verbosity(tf.logging.INFO)
@@ -211,6 +217,8 @@ def main(_):
 
       tf.logging.info('Generating test data...')
       generate_test_data(vocab_ids, writer_lm_all, writer_seq_ae_all)
+
+
 
 
 if __name__ == '__main__':

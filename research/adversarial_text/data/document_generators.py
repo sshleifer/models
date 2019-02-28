@@ -190,7 +190,8 @@ def imdb_documents(dataset='train',
     return is_pos_valid or is_neg_valid
 
   dirs = [(dataset + '/pos', True), (dataset + '/neg', False)]
-  if include_unlabeled:
+  has_unsup_dir = os.path.exists(os.path.join(FLAGS.imdb_input_dir, 'train/unsup'))
+  if include_unlabeled and has_unsup_dir:
     dirs.append(('train/unsup', None))
 
   for d, class_label in dirs:
