@@ -185,7 +185,7 @@ def _read_single_sequence_example(file_list, tokens_shape=None):
 
 
 def _read_and_batch(data_dir,
-                    fname,
+                    fnames,
                     state_name,
                     state_size,
                     num_layers,
@@ -211,13 +211,16 @@ def _read_and_batch(data_dir,
   Raises:
     ValueError: if file for input specification is not found.
   """
-  data_path = os.path.join(data_dir, fname)
-  if not tf.gfile.Exists(data_path):
-    raise ValueError('Failed to find file: %s' % data_path)
+  if not isinstance(fnames, list):
+      fnames = [fnames]
+  data_paths = [os.path.join(data_dir, fn) for fn in fnames]
+  for data_path in data_paths:
+      if not tf.gfile.Exists(data_path):
+        raise ValueError('Failed to find file: %s' % data_path)
 
   tokens_shape = [2] if bidir_input else []
   seq_key, ctx, sequence = _read_single_sequence_example(
-      [data_path], tokens_shape=tokens_shape)
+      data_paths, tokens_shape=tokens_shape)
   # Set up stateful queue reader.
   state_names = _get_tuple_state_names(num_layers, state_name)
   initial_states = {}
@@ -304,7 +307,7 @@ def inputs(data_dir=None,
     elif bidir:
       # Classifier bidirectional LSTM
       # Shared data source, but separate token/state streams
-      fname, = filenames
+      fname = filenames
       batch = _read_and_batch(
           data_dir,
           fname,

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+$ wget http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz \
+    -O /tmp/imdb.tar.gz
+tar -xf /tmp/imdb.tar.gz -C /tmp
 PRETRAIN_DIR=/tmp/models/imdb_small_pretrain
 IMDB_DATA_DIR=/tmp/imdb_small_records
 
@@ -32,7 +35,7 @@ python pretrain.py \
     --batch_size=32 \
     --learning_rate=0.001 \
     --learning_rate_decay_factor=0.9999 \
-    --max_steps=100 \
+    --max_steps=30 \
     --max_grad_norm=1.0 \
     --num_timesteps=400 \
     --keep_prob_emb=0.5 \

@@ -36,6 +36,7 @@ from __future__ import print_function
 import tensorflow as tf
 
 import graphs
+import time
 import train_utils
 
 flags = tf.app.flags
@@ -47,6 +48,7 @@ flags.DEFINE_string('pretrained_model_dir', None,
 
 def main(_):
   """Trains LSTM classification model."""
+  start = time.time()
   tf.logging.set_verbosity(tf.logging.INFO)
   with tf.device(tf.train.replica_device_setter(FLAGS.ps_tasks)):
     model = graphs.get_model()
@@ -57,6 +59,8 @@ def main(_):
         global_step,
         variables_to_restore=model.pretrained_variables,
         pretrained_model_dir=FLAGS.pretrained_model_dir)
+
+  print(f'done in {(time.time()-start)/60:.1f} minutes')
 
 
 if __name__ == '__main__':
