@@ -1,6 +1,12 @@
-# Adversarial Text Classification
+## Data Augmentation Experiments
+ Using fork of code for [*Adversarial Training Methods for Semi-Supervised Text Classification*](https://arxiv.org/abs/1605.07725) and [*Semi-Supervised Sequence Learning*](https://arxiv.org/abs/1511.01432).
 
-Code for [*Adversarial Training Methods for Semi-Supervised Text Classification*](https://arxiv.org/abs/1605.07725) and [*Semi-Supervised Sequence Learning*](https://arxiv.org/abs/1511.01432).
+## Updated Requirements
+Tensorflow 1.7
+python 3.6 
+
+
+
 
 ## Requirements
 
