@@ -191,7 +191,8 @@ def _read_and_batch(data_dir,
                     num_layers,
                     unroll_steps,
                     batch_size,
-                    bidir_input=False):
+                    bidir_input=False,
+                    extra_dirs=None):
   """Inputs for text model.
 
   Args:
@@ -205,22 +206,27 @@ def _read_and_batch(data_dir,
     bidir_input: bool, whether the input is bidirectional. If True, creates 2
       states, state_name and state_name + '_reverse'.
 
+    extra_dirs: list of extra directories from which to use fnames
+
   Returns:
     Instance of NextQueuedSequenceBatch
 
   Raises:
     ValueError: if file for input specification is not found.
   """
-  if not isinstance(fnames, list):
+  if not isinstance(fnames, list):  # fname can be a str we dont really need this
       fnames = [fnames]
-  data_paths = [os.path.join(data_dir, fn) for fn in fnames]
+  if extra_dirs is None: all_dirs = [data_dir]
+  else: all_dirs = [data_dir] + extra_dirs
+  data_paths = [os.path.join(dd, fn) for fn in fnames for dd in all_dirs]
   for data_path in data_paths:
       if not tf.gfile.Exists(data_path):
         raise ValueError('Failed to find file: %s' % data_path)
 
   tokens_shape = [2] if bidir_input else []
-  seq_key, ctx, sequence = _read_single_sequence_example(
-      data_paths, tokens_shape=tokens_shape)
+  p2 = ['/tmp/imdb_small_records/train_lm.tfrecords', '/tmp/imdb_small_aug_records/train_lm.tfrecords']
+  seq_key, ctx, sequence = _read_single_sequence_example(p2, tokens_shape=tokens_shape)
+  #seq_key, ctx, sequence = _read_single_sequence_example(data_paths, tokens_shape=tokens_shape)
   # Set up stateful queue reader.
   state_names = _get_tuple_state_names(num_layers, state_name)
   initial_states = {}
@@ -250,6 +256,7 @@ def _read_and_batch(data_dir,
 
 
 def inputs(data_dir=None,
+           extra_dirs=None,
            phase='train',
            bidir=False,
            pretrain=False,
@@ -307,7 +314,7 @@ def inputs(data_dir=None,
     elif bidir:
       # Classifier bidirectional LSTM
       # Shared data source, but separate token/state streams
-      fname = filenames
+      fname, = filenames
       batch = _read_and_batch(
           data_dir,
           fname,
@@ -340,6 +347,6 @@ def inputs(data_dir=None,
           num_layers,
           unroll_steps,
           batch_size,
-          bidir_input=False)
+          bidir_input=False, extra_dirs=extra_dirs)
       return VatxtInput(
           batch, state_name=state_name, num_states=num_layers, eos_id=eos_id)

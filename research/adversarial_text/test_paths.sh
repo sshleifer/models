@@ -24,20 +24,21 @@ python gen_data.py \
 #    --label_gain=False
 
 # note vocab size change in below
-
+rm -rf $PRETRAIN_DIR
 python pretrain.py \
     --train_dir=$PRETRAIN_DIR \
     --data_dir=$IMDB_DATA_DIR \
     --vocab_size=87007 \
     --embedding_dims=256 \
-    --rnn_cell_size=1024 \
-    --num_candidate_samples=1024 \
-    --batch_size=32 \
+    --extra_dirs=/tmp/imdb_small_aug_records
+    --rnn_cell_size=10 \
+    --num_candidate_samples=12 \
+    --batch_size=8 \
     --learning_rate=0.001 \
     --learning_rate_decay_factor=0.9999 \
-    --max_steps=30 \
+    --max_steps=5 \
     --max_grad_norm=1.0 \
-    --num_timesteps=400 \
+    --num_timesteps=20 \
     --keep_prob_emb=0.5 \
     --normalize_embeddings
 

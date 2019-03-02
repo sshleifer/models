@@ -39,6 +39,8 @@ flags.DEFINE_integer('num_classes', 2, 'Number of classes for classification')
 # Data path
 flags.DEFINE_string('data_dir', '/tmp/IMDB',
                     'Directory path to preprocessed text dataset.')
+flags.DEFINE_list('extra_dirs', [],
+                    'Comma separated directory paths to other preprocessed datasets to train on. Like paraphrases.')
 flags.DEFINE_string('vocab_freq_path', None,
                     'Path to pre-calculated vocab frequency data. If '
                     'None, use FLAGS.data_dir/vocab_freq.txt.')
